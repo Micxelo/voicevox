@@ -5,14 +5,16 @@ import type {
   MaybeComputedMenuBarContent,
   MenuBarContent,
 } from "@/components/Menu/MenuBar/menuBarData";
+import { useI18n } from "vue-i18n";
 
 export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
+  const { t } = useI18n();
   // 「ファイル」メニュー
   const fileSubMenuData = computed<MenuBarContent["file"]>(() => ({
     audioExport: [
       {
         type: "button",
-        label: "音声書き出し",
+        label: t("talk.menuBarData.exportAudio"),
         onClick: () => {
           void store.actions.SHOW_GENERATE_AND_SAVE_ALL_AUDIO_DIALOG();
         },
@@ -20,7 +22,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
       },
       {
         type: "button",
-        label: "選択音声を書き出し",
+        label: t("talk.menuBarData.exportSelectedAudio"),
         onClick: () => {
           void store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_DIALOG();
         },
@@ -28,7 +30,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
       },
       {
         type: "button",
-        label: "音声を繋げて書き出し",
+        label: t("talk.menuBarData.connectAndExportAudio"),
         onClick: () => {
           void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG();
         },
@@ -38,7 +40,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
     externalProject: [
       {
         type: "button",
-        label: "テキストを繋げて書き出し",
+        label: t("talk.menuBarData.connectAndExportText"),
         onClick: () => {
           void store.actions.SHOW_CONNECT_AND_EXPORT_TEXT_DIALOG();
         },
@@ -46,7 +48,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
       },
       {
         type: "button",
-        label: "テキスト読み込み",
+        label: t("talk.menuBarData.importText"),
         onClick: () => {
           void store.actions.COMMAND_IMPORT_FROM_FILE({ type: "dialog" });
         },
@@ -64,7 +66,9 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
     guide: [
       {
         type: "button",
-        label: showTextLineNumber.value ? "行番号を非表示" : "行番号を表示",
+        label: showTextLineNumber.value
+          ? t("talk.menuBarData.hideLineNumber")
+          : t("talk.menuBarData.showLineNumber"),
         onClick: () => {
           changeShowTextLineNumber(!showTextLineNumber.value);
         },

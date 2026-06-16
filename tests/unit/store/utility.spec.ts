@@ -252,7 +252,8 @@ describe("isAccentPhrasesTextDifferent", () => {
 
 test("buildAudioFileNameFromRawData", () => {
   const fileNamePattern =
-    "index=$連番$ characterName=$キャラ$ text=$テキスト$ styleName=$スタイル$ date=$日付$ projectName=$プロジェクト名$";
+    // "index=$連番$ characterName=$キャラ$ text=$テキスト$ styleName=$スタイル$ date=$日付$ projectName=$プロジェクト名$";
+    "index=$index$ characterName=$character$ text=$text$ styleName=$style$ date=$date$ projectName=$project$";
   const vars = {
     index: 10,
     characterName: "キャラ１",

@@ -15,11 +15,11 @@
       icon="push_pin"
       color="teal"
       class="title-bar-buttons"
-      aria-label="最前面固定を解除"
+      :aria-label="t('menu.menuBar.titleBarButtons.unpinToTop')"
       @click="changePinWindow()"
     >
       <QTooltip :delay="500" class="text-body2" :offset="[11, 11]">
-        最前面固定を解除
+        {{ t("menu.menuBar.titleBarButtons.unpinToTop") }}
       </QTooltip>
     </QBtn>
     <QBtn
@@ -31,11 +31,11 @@
       icon="push_pin"
       color="display"
       class="title-bar-buttons rotate-45"
-      aria-label="最前面に固定"
+      :aria-label="t('menu.menuBar.titleBarButtons.pinToTop')"
       @click="changePinWindow()"
     >
       <QTooltip :delay="500" class="text-body2" :offset="[11, 11]">
-        最前面に固定
+        {{ t("menu.menuBar.titleBarButtons.pinToTop") }}
       </QTooltip>
     </QBtn>
   </QBadge>
@@ -55,11 +55,11 @@
       icon="push_pin"
       color="teal"
       class="title-bar-buttons"
-      aria-label="最前面固定を解除"
+      :aria-label="t('menu.menuBar.titleBarButtons.unpinToTop')"
       @click="changePinWindow()"
     >
       <QTooltip :delay="500" class="text-body2" :offset="[11, 11]">
-        最前面固定を解除
+        {{ t("menu.menuBar.titleBarButtons.unpinToTop") }}
       </QTooltip>
     </QBtn>
     <QBtn
@@ -70,11 +70,11 @@
       round
       icon="push_pin"
       class="title-bar-buttons rotate-45"
-      aria-label="最前面に固定"
+      :aria-label="t('menu.menuBar.titleBarButtons.pinToTop')"
       @click="changePinWindow()"
     >
       <QTooltip :delay="500" class="text-body2" :offset="[11, 11]">
-        最前面に固定
+        {{ t("menu.menuBar.titleBarButtons.pinToTop") }}
       </QTooltip>
     </QBtn>
   </QBadge>
@@ -86,6 +86,9 @@ import { computed } from "vue";
 import { useQuasar } from "quasar";
 import MinMaxCloseButtons from "./MinMaxCloseButtons.vue";
 import { useStore } from "@/store";
+
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const $q = useQuasar();
 const store = useStore();

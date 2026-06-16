@@ -2085,6 +2085,7 @@ export type SettingStoreState = {
   engineIds: EngineId[];
   engineInfos: Record<EngineId, EngineInfo>;
   engineManifests: Record<EngineId, EngineManifest>;
+  locale: string;
   currentTheme: string;
   availableThemes: ThemeConf[];
   acceptTerms: AcceptTermsStatus;
@@ -2127,6 +2128,11 @@ export type SettingStoreTypes = {
   SET_ROOT_MISC_SETTING: {
     mutation: KeyValuePayload<RootMiscSettingType>;
     action(payload: KeyValuePayload<RootMiscSettingType>): void;
+  };
+
+  SET_LOCALE: {
+    mutation: { locale: string };
+    action(payload: { locale: string }): void;
   };
 
   SET_CURRENT_THEME_SETTING: {

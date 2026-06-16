@@ -12,7 +12,7 @@
         <QHeader class="q-pa-sm">
           <QToolbar>
             <QToolbarTitle class="text-display"
-              >設定 / オプション</QToolbarTitle
+              >{{ t("dialog.settingDialog.title") }}</QToolbarTitle
             >
             <QSpace />
             <!-- close button -->
@@ -21,7 +21,7 @@
               flat
               icon="close"
               color="display"
-              aria-label="設定を閉じる"
+              :aria-label="t('dialog.settingDialog.close')"
               @click="dialogOpened = false"
             />
           </QToolbar>
@@ -32,7 +32,7 @@
               <!-- Engine Mode Card -->
               <div class="setting-card">
                 <div class="title-row">
-                  <h5 class="headline">エンジン</h5>
+                  <h5 class="headline">{{ t("dialog.settingDialog.engine.title") }}</h5>
                   <template v-if="engineIds.length > 1">
                     <BaseSelect v-model="selectedEngineId">
                       <BaseSelectItem
@@ -46,14 +46,15 @@
                 </div>
                 <BaseTooltip
                   :label="
-                    engineInfos[selectedEngineId].name +
-                    'はCPU版のためGPUモードを利用できません。'
+                    t('dialog.settingDialog.engine.gpuModeUnsupported', {
+                      engineName: engineInfos[selectedEngineId].name,
+                    })
                   "
                   :disabled="gpuSwitchEnabled(selectedEngineId)"
                 >
                   <ButtonToggleCell
-                    title="エンジンモード"
-                    description="GPU モードの利用には GPU が必要です。Linux は NVIDIA™ 製 GPU のみ対応しています。"
+                    :title="t('dialog.settingDialog.engine.mode')"
+                    :description="t('dialog.settingDialog.engine.modeDescription')"
                     :options="engineUseGpuOptions"
                     :disable="!gpuSwitchEnabled(selectedEngineId)"
                     :modelValue="selectedEngineUseGpu ? 'GPU' : 'CPU'"
@@ -63,8 +64,8 @@
                   />
                 </BaseTooltip>
                 <SelectCell
-                  title="音声のサンプリングレート"
-                  description="再生・保存時の音声のサンプリングレートを変更できます（サンプリングレートを上げても音声の品質は上がりません）。"
+                  :title="t('dialog.settingDialog.engine.samplingRate')"
+                  :description="t('dialog.settingDialog.engine.samplingRateDescription')"
                   :modelValue="outputSamplingRate.toString()"
                   :options="
                     samplingRateOptions.map((option) => {
@@ -82,10 +83,10 @@
               </div>
               <!-- Preservation Setting -->
               <div class="setting-card">
-                <h5 class="headline">操作</h5>
+                <h5 class="headline">{{ t("dialog.settingDialog.operation.title") }}</h5>
                 <ToggleCell
-                  title="プリセット機能"
-                  description="ONの場合、プリセット機能を有効にします。パラメータを登録したり適用したりできます。"
+                  :title="t('dialog.settingDialog.operation.preset')"
+                  :description="t('dialog.settingDialog.operation.presetDescription')"
                   :modelValue="enablePreset"
                   @update:modelValue="changeEnablePreset"
                 />
@@ -93,8 +94,8 @@
                   <!-- q-slide-transitionはheightだけをアニメーションするのでdivで囲う -->
                   <div v-show="enablePreset" class="transition-container">
                     <ToggleCell
-                      title="スタイル変更時にデフォルトプリセットを適用"
-                      description="ONの場合、キャラやスタイルの変更時にデフォルトプリセットが自動的に適用されます。"
+                      :title="t('dialog.settingDialog.operation.applyDefaultPreset')"
+                      :description="t('dialog.settingDialog.operation.applyDefaultPresetDescription')"
                       class="in-slide-transition-workaround"
                       :modelValue="shouldApplyDefaultPresetOnVoiceChanged"
                       @update:modelValue="
@@ -104,53 +105,52 @@
                   </div>
                 </QSlideTransition>
                 <ToggleCell
-                  title="パラメータの引き継ぎ"
-                  description="ONの場合、テキスト欄追加の際に、現在の話速等のパラメータが引き継がれます。"
+                  :title="t('dialog.settingDialog.operation.inheritParams')"
+                  :description="t('dialog.settingDialog.operation.inheritParamsDescription')"
                   :modelValue="inheritAudioInfoMode"
                   @update:modelValue="changeinheritAudioInfo"
                 />
                 <ButtonToggleCell
                   v-model="activePointScrollMode"
-                  title="再生位置を追従"
-                  description="音声再生中の、詳細調整欄の自動スクロールのモードを選べます。"
+                  :title="t('dialog.settingDialog.operation.scrollMode')"
+                  :description="t('dialog.settingDialog.operation.scrollModeDescription')"
                   :options="[
                     {
-                      label: '連続',
+                      label: t('dialog.settingDialog.operation.scrollModeOptions.continuous'),
                       value: 'CONTINUOUSLY',
-                      description: '現在の再生位置を真ん中に表示します。',
+                      description: t('dialog.settingDialog.operation.scrollModeOptions.continuousDescription'),
                     },
                     {
-                      label: 'ページめくり',
+                      label: t('dialog.settingDialog.operation.scrollModeOptions.page'),
                       value: 'PAGE',
-                      description:
-                        '現在の再生位置が表示範囲外にある場合にスクロールします。',
+                      description: t('dialog.settingDialog.operation.scrollModeOptions.pageDescription'),
                     },
                     {
-                      label: 'オフ',
+                      label: t('dialog.settingDialog.operation.scrollModeOptions.none'),
                       value: 'OFF',
-                      description: '自動でスクロールしません。',
+                      description: t('dialog.settingDialog.operation.scrollModeOptions.noneDescription'),
                     },
                   ]"
                 />
                 <ButtonToggleCell
-                  title="テキスト自動分割"
-                  description="テキスト貼り付けの際のテキストの分割箇所を選べます。"
+                  :title="t('dialog.settingDialog.operation.textSplit')"
+                  :description="t('dialog.settingDialog.operation.textSplitDescription')"
                   :modelValue="splitTextWhenPaste"
                   :options="[
                     {
-                      label: '句点と改行',
+                      label: t('dialog.settingDialog.operation.textSplitOptions.periodNewline'),
                       value: 'PERIOD_AND_NEW_LINE',
-                      description: '句点と改行を基にテキストを分割します。',
+                      description: t('dialog.settingDialog.operation.textSplitOptions.periodNewlineDescription'),
                     },
                     {
-                      label: '改行',
+                      label: t('dialog.settingDialog.operation.textSplitOptions.newline'),
                       value: 'NEW_LINE',
-                      description: '改行のみを基にテキストを分割します。',
+                      description: t('dialog.settingDialog.operation.textSplitOptions.newlineDescription'),
                     },
                     {
-                      label: 'オフ',
+                      label: t('dialog.settingDialog.operation.textSplitOptions.none'),
                       value: 'OFF',
-                      description: '分割を行いません。',
+                      description: t('dialog.settingDialog.operation.textSplitOptions.noneDescription'),
                     },
                   ]"
                   @update:modelValue="
@@ -160,23 +160,23 @@
                   "
                 />
                 <ToggleCell
-                  title="メモ機能"
-                  description="ONの場合、テキストを [] で囲むことで、テキスト中にメモを書けます。"
+                  :title="t('dialog.settingDialog.operation.memo')"
+                  :description="t('dialog.settingDialog.operation.memoDescription')"
                   :modelValue="enableMemoNotation"
                   @update:modelValue="changeEnableMemoNotation"
                 />
                 <ToggleCell
-                  title="ルビ機能"
-                  description="ONの場合、テキストに {ルビ対象|よみかた} と書くことで、テキストの読み方を変えられます。"
+                  :title="t('dialog.settingDialog.operation.ruby')"
+                  :description="t('dialog.settingDialog.operation.rubyDescription', { leftBrace: '{', bar: '|', rightBrace: '}' })"
                   :modelValue="enableRubyNotation"
                   @update:modelValue="changeEnableRubyNotation"
                 />
                 <BaseRowCard
-                  title="非表示にしたヒントを全て再表示"
-                  description="過去に非表示にしたヒントを全て再表示できます。"
+                  :title="t('dialog.settingDialog.operation.resetHints')"
+                  :description="t('dialog.settingDialog.operation.resetHintsDescription')"
                 >
                   <BaseButton
-                    label="再表示する"
+                    :label="t('dialog.settingDialog.operation.resetHintsButton')"
                     :disabled="isDefaultConfirmedTips"
                     @click="
                       () => {
@@ -187,18 +187,18 @@
                   />
                 </BaseRowCard>
                 <ToggleCell
-                  title="複数選択"
-                  description="ONの場合、複数のテキスト欄を選択できるようにします。"
+                  :title="t('dialog.settingDialog.operation.multiSelect')"
+                  :description="t('dialog.settingDialog.operation.multiSelectDescription')"
                   :modelValue="enableMultiSelect"
                   @update:modelValue="setEnableMultiSelect($event)"
                 />
               </div>
               <!-- Saving Card -->
               <div class="setting-card">
-                <h5 class="headline">保存</h5>
+                <h5 class="headline">{{ t("dialog.settingDialog.saving.title") }}</h5>
                 <ToggleCell
-                  title="書き出し先を固定"
-                  description="ONの場合、書き出す際のフォルダをあらかじめ指定できます。"
+                  :title="t('dialog.settingDialog.saving.fixedExport')"
+                  :description="t('dialog.settingDialog.saving.fixedExportDescription')"
                   :modelValue="savingSetting.fixedExportEnabled"
                   @update:modelValue="
                     handleSavingSettingChange('fixedExportEnabled', $event)
@@ -211,11 +211,11 @@
                     v-show="savingSetting.fixedExportEnabled"
                     class="transition-container"
                   >
-                    <BaseRowCard title="書き出し先のフォルダ">
+                    <BaseRowCard :title="t('dialog.settingDialog.saving.fixedExportDir')">
                       {{ savingSetting.fixedExportDir }}
                       <BaseButton
                         icon="folder_open"
-                        label="フォルダ選択"
+                        :label="t('dialog.settingDialog.saving.fixedExportButton')"
                         @click="selectFixedExportDir()"
                       >
                       </BaseButton>
@@ -264,23 +264,23 @@
                 />
 
                 <EditButtonCell
-                  title="トーク：書き出しファイル名パターン"
-                  description="書き出す際のファイル名のパターンをカスタマイズできます。"
+                  :title="t('dialog.settingDialog.saving.talkFileNamePattern')"
+                  :description="t('dialog.settingDialog.saving.talkFileNamePatternDescription')"
                   :currentValue="audioFileNamePatternWithExt"
                   @buttonClick="showAudioFilePatternEditDialog = true"
                 />
 
                 <ToggleCell
-                  title="上書き防止"
-                  description="ONの場合、書き出す際に同名ファイルが既にあったとき、ファイル名に連番を付けて別名で保存されます。"
+                  :title="t('dialog.settingDialog.saving.avoidOverwrite')"
+                  :description="t('dialog.settingDialog.saving.avoidOverwriteDescription')"
                   :modelValue="savingSetting.avoidOverwrite"
                   @update:modelValue="
                     handleSavingSettingChange('avoidOverwrite', $event)
                   "
                 />
                 <ButtonToggleCell
-                  title="文字コード"
-                  description="テキストファイルを書き出す際の文字コードを選べます。"
+                  :title="t('dialog.settingDialog.saving.encoding')"
+                  :description="t('dialog.settingDialog.saving.encodingDescription')"
                   :modelValue="savingSetting.fileEncoding"
                   :options="[
                     { label: 'UTF-8', value: 'UTF-8' },
@@ -291,16 +291,16 @@
                   "
                 />
                 <ToggleCell
-                  title="txtファイルを書き出し"
-                  description="ONの場合、音声書き出しの際にテキストがtxtファイルとして書き出されます。"
+                  :title="t('dialog.settingDialog.saving.exportTxt')"
+                  :description="t('dialog.settingDialog.saving.exportTxtDescription')"
                   :modelValue="savingSetting.exportText"
                   @update:modelValue="
                     handleSavingSettingChange('exportText', $event)
                   "
                 />
                 <ToggleCell
-                  title="labファイルを書き出し"
-                  description="ONの場合、音声書き出しの際にリップシンク用のlabファイルが書き出されます。"
+                  :title="t('dialog.settingDialog.saving.exportLab')"
+                  :description="t('dialog.settingDialog.saving.exportLabDescription')"
                   :modelValue="savingSetting.exportLab"
                   @update:modelValue="
                     handleSavingSettingChange('exportLab', $event)
@@ -308,48 +308,54 @@
                 />
 
                 <EditButtonCell
-                  title="ソング：トラックファイル名パターン"
-                  description="書き出す際のファイル名のパターンをカスタマイズできます。"
+                  :title="t('dialog.settingDialog.saving.songTrackFileNamePattern')"
+                  :description="t('dialog.settingDialog.saving.songTrackFileNamePatternDescription')"
                   :currentValue="songTrackFileNamePatternWithExt"
                   @buttonClick="showSongTrackAudioFilePatternEditDialog = true"
                 />
               </div>
               <!-- Theme Card -->
               <div class="setting-card">
-                <h5 class="headline">外観</h5>
+                <h5 class="headline">{{ t("dialog.settingDialog.theme.title") }}</h5>
+                <ButtonToggleCell
+                  v-model="currentLocaleComputed"
+                  :title="t('dialog.settingDialog.theme.language')"
+                  :description="t('dialog.settingDialog.theme.languageDescription')"
+                  :options="localeOptions"
+                />
                 <ButtonToggleCell
                   v-model="currentThemeNameComputed"
-                  title="テーマ"
-                  description="エディタの色を選べます。"
+                  :title="t('dialog.settingDialog.theme.theme')"
+                  :description="t('dialog.settingDialog.theme.themeDescription')"
                   :options="availableThemeNameComputed"
                 />
                 <ButtonToggleCell
-                  title="フォント"
-                  description="エディタのフォントを選べます。"
+                  :title="t('dialog.settingDialog.theme.font')"
+                  :description="t('dialog.settingDialog.theme.fontDescription')"
                   :modelValue="editorFont"
                   :options="[
-                    { label: 'デフォルト', value: 'default' },
-                    { label: 'OS標準', value: 'os' },
+                    { label: t('dialog.settingDialog.theme.fontOptions.default'), value: 'default' },
+                    { label: t('dialog.settingDialog.theme.fontOptions.os'), value: 'os' }
                   ]"
                   @update:modelValue="
                     changeEditorFont($event as EditorFontType)
                   "
                 />
                 <ToggleCell
-                  title="行番号の表示"
-                  description="ONの場合、テキスト欄の左側に行番号が表示されます。"
+                  :title="t('dialog.settingDialog.theme.showLineNumber')"
+                  :description="t('dialog.settingDialog.theme.showLineNumberDescription')"
                   :modelValue="showTextLineNumber"
                   @update:modelValue="changeShowTextLineNumber"
                 />
                 <ToggleCell
-                  title="音声の長さの表示"
-                  description="ONの場合、テキスト欄の右側に音声の長さが表示されます。"
+                  :title="t('dialog.settingDialog.theme.showAudioLength')"
+                  :description="t('dialog.settingDialog.theme.showAudioLengthDescription')"
                   :modelValue="showAudioLength"
                   @update:modelValue="changeShowAudioLength"
                 />
                 <ToggleCell
-                  title="テキスト追加ボタンの表示"
-                  description="OFFの場合、右下にテキスト追加ボタンが表示されません。（テキスト欄は Shift + Enter で追加できます）"
+                  :title="t('dialog.settingDialog.theme.showAddButton')"
+                  :description="t('dialog.settingDialog.theme.showAddButtonDescription')"
                   :modelValue="showAddAudioItemButton"
                   @update:modelValue="changeShowAddAudioItemButton"
                 />
@@ -357,29 +363,29 @@
 
               <!-- Advanced Card -->
               <div class="setting-card">
-                <h5 class="headline">高度な設定</h5>
+                <h5 class="headline">{{ t("dialog.settingDialog.advanced.title") }}</h5>
                 <ToggleCell
-                  title="マルチエンジン機能"
-                  description="ONの場合、複数のVOICEVOX準拠エンジンを利用可能にします。"
+                  :title="t('dialog.settingDialog.advanced.multiEngine')"
+                  :description="t('dialog.settingDialog.advanced.multiEngineDescription')"
                   :modelValue="enableMultiEngine"
                   @update:modelValue="setEnableMultiEngine"
                 />
                 <ToggleCell
-                  title="音声をステレオ化"
-                  description="ONの場合、音声データがモノラルからステレオに変換されてから再生・保存が行われます。"
+                  :title="t('dialog.settingDialog.advanced.stereo')"
+                  :description="t('dialog.settingDialog.advanced.stereoDescription')"
                   :modelValue="savingSetting.outputStereo"
                   @update:modelValue="
                     handleSavingSettingChange('outputStereo', $event)
                   "
                 />
                 <BaseTooltip
-                  label="この機能はお使いの環境でサポートされていないため、使用できません。"
+                  :label="t('dialog.settingDialog.advanced.audioDeviceUnsupported')"
                   :disabled="canSetAudioOutputDevice"
                 >
                   <SelectCell
                     v-model="currentAudioOutputDeviceComputed"
-                    title="再生デバイス"
-                    description="音声の再生デバイスを変更できます。"
+                    :title="t('dialog.settingDialog.advanced.audioDevice')"
+                    :description="t('dialog.settingDialog.advanced.audioDeviceDescription')"
                     :disable="!canSetAudioOutputDevice"
                     :options="
                       availableAudioOutputDevices
@@ -399,22 +405,22 @@
                 >
                   <ToggleCell
                     v-model="enableKatakanaEnglish.enabled.value"
-                    title="未知の英単語をカタカナ読みに変換"
-                    description="ONの場合、エンジンが対応している場合は、未知の英単語をカタカナ読みに変換します。"
+                    :title="t('dialog.settingDialog.advanced.katakanaEnglish')"
+                    :description="t('dialog.settingDialog.advanced.katakanaEnglishDescription')"
                   />
                 </BaseTooltip>
                 <ButtonToggleCell
                   v-model="defaultLyricModeComputed"
-                  title="ソング：デフォルト歌詞"
-                  description="歌詞が未設定の音符に対してデフォルトで設定される歌詞を設定できます。"
+                  :title="t('dialog.settingDialog.advanced.defaultLyric')"
+                  :description="t('dialog.settingDialog.advanced.defaultLyricDescription')"
                   :options="[
-                    { label: 'ドレミ（階名）', value: 'doremi' },
-                    { label: 'ら（固定）', value: 'la' },
+                    { label: t('dialog.settingDialog.advanced.defaultLyricOptions.doremi'), value: 'doremi' },
+                    { label: t('dialog.settingDialog.advanced.defaultLyricOptions.la'), value: 'la' },
                   ]"
                 />
                 <BaseRowCard
-                  title="ソング：元に戻すトラック操作"
-                  description="「元に戻す」機能の対象とするトラック操作を指定します。"
+                  :title="t('dialog.settingDialog.advanced.undoTrackOperation')"
+                  :description="t('dialog.settingDialog.advanced.undoTrackOperationDescription')"
                 >
                   <div class="checkbox-list">
                     <BaseCheckbox
@@ -440,11 +446,11 @@
 
               <!-- Experimental Card -->
               <div class="setting-card">
-                <h5 class="headline">実験的機能</h5>
+                <h5 class="headline">{{ t("dialog.settingDialog.experimental.title") }}</h5>
                 <!-- 今後実験的機能を追加する場合はここに追加 -->
                 <ToggleCell
-                  title="疑問文を自動調整"
-                  description="ONの場合、疑問文の語尾の音高が自動的に上げられます。"
+                  :title="t('dialog.settingDialog.experimental.interrogative')"
+                  :description="t('dialog.settingDialog.experimental.interrogativeDescription')"
                   :modelValue="experimentalSetting.enableInterrogativeUpspeak"
                   @update:modelValue="
                     changeExperimentalSetting(
@@ -454,8 +460,8 @@
                   "
                 />
                 <ToggleCell
-                  title="モーフィング機能"
-                  description="ONの場合、モーフィング機能を有効にします。2つの音声混ぜられるようになります。"
+                  :title="t('dialog.settingDialog.experimental.morphing')"
+                  :description="t('dialog.settingDialog.experimental.morphingDescription')"
                   :modelValue="experimentalSetting.enableMorphing"
                   @update:modelValue="
                     changeExperimentalSetting('enableMorphing', $event)
@@ -463,8 +469,8 @@
                 />
                 <ToggleCell
                   v-if="!isProduction"
-                  title="[開発時のみ機能] 調整結果の保持"
-                  description="ONの場合、テキスト変更時、同じ読みのアクセント区間内の調整結果を保持します。"
+                  :title="t('dialog.settingDialog.experimental.keepTuning')"
+                  :description="t('dialog.settingDialog.experimental.keepTuningDescription')"
                   :modelValue="experimentalSetting.shouldKeepTuningOnTextChange"
                   @update:modelValue="
                     changeExperimentalSetting(
@@ -475,8 +481,8 @@
                 />
                 <ToggleCell
                   v-if="!isProduction"
-                  title="[開発時のみ機能] ソング：パラメーターパネルの表示"
-                  description="ONの場合、ソングエディタでパラメーターパネルが表示されます。"
+                  :title="t('dialog.settingDialog.experimental.showParameterPanel')"
+                  :description="t('dialog.settingDialog.experimental.showParameterPanelDescription')"
                   :modelValue="experimentalSetting.showParameterPanel"
                   @update:modelValue="
                     changeExperimentalSetting('showParameterPanel', $event)
@@ -484,10 +490,10 @@
                 />
               </div>
               <div class="setting-card">
-                <h5 class="headline">データ収集</h5>
+                <h5 class="headline">{{ t("dialog.settingDialog.telemetry.title") }}</h5>
                 <ToggleCell
-                  title="ソフトウェア利用状況のデータ収集を許可"
-                  description="ONの場合、各UIの利用率などのデータが送信され、VOICEVOXの改善に役立てられます。テキストデータや音声データは送信されません。"
+                  :title="t('dialog.settingDialog.telemetry.allow')"
+                  :description="t('dialog.settingDialog.telemetry.allowDescription')"
                   :modelValue="acceptRetrieveTelemetryComputed"
                   @update:modelValue="acceptRetrieveTelemetryComputed = $event"
                 />
@@ -534,6 +540,8 @@ import { createLogger } from "@/helpers/log";
 import { useRootMiscSetting } from "@/composables/useRootMiscSetting";
 import { isProduction } from "@/helpers/platform";
 import { ExhaustiveError } from "@/type/utility";
+import { useI18n } from "vue-i18n";
+const { t, locale } = useI18n();
 
 type SamplingRateOption = EngineSettingType["outputSamplingRate"];
 
@@ -586,7 +594,7 @@ const samplingRateOptions: SamplingRateOption[] = [
 ];
 const renderSamplingRateLabel = (value: SamplingRateOption): string => {
   if (value === "engineDefault") {
-    return "デフォルト";
+    return t('dialog.settingDialog.engine.samplingRateDefault');
   } else {
     return `${value / 1000} kHz`;
   }
@@ -599,10 +607,9 @@ const outputSamplingRate = computed({
   set: async (outputSamplingRate: SamplingRateOption) => {
     if (outputSamplingRate !== "engineDefault") {
       const result = await store.actions.SHOW_CONFIRM_DIALOG({
-        title: "出力サンプリングレートを変更しますか？",
-        message:
-          "出力サンプリングレートを変更しても、音質は変化しません。また、音声の生成処理に若干時間がかかる場合があります。",
-        actionName: "変更する",
+        title: t('dialog.settingDialog.engine.samplingRateConfirmTitle'),
+        message: t('dialog.settingDialog.engine.samplingRateConfirmMessage'),
+        actionName: t('dialog.settingDialog.engine.samplingRateConfirmAction'),
       });
       if (result !== "OK") {
         return;
@@ -628,10 +635,10 @@ const isDefaultConfirmedTips = computed(() => {
 });
 
 // ソング：元に戻すトラック操作
-const undoableTrackOperationsLabels = {
-  soloAndMute: "ミュート・ソロ",
-  panAndGain: "パン・音量",
-};
+const undoableTrackOperationsLabels = computed(() => ({
+  soloAndMute: t('dialog.settingDialog.advanced.undoTrackOperationOptions.soloMute'),
+  panAndGain: t('dialog.settingDialog.advanced.undoTrackOperationOptions.panGain'),
+}));
 const undoableTrackOperations = computed({
   get: () => store.state.undoableTrackOperations,
   set: (undoableTrackOperations) => {
@@ -643,6 +650,19 @@ const undoableTrackOperations = computed({
 });
 
 // 外観
+const localeOptions = [
+  { label: '日本語', value: 'ja-JP' },
+  { label: '中文', value: 'zh-CN' },
+];
+
+const currentLocaleComputed = computed({
+  get: () => store.state.locale,
+  set: (newLocale: string) => {
+    store.actions.SET_LOCALE({ locale: newLocale });
+    locale.value = newLocale;
+  },
+});
+
 const currentThemeNameComputed = computed({
   get: () => store.state.currentTheme,
   set: (currentTheme: string) => {
@@ -703,9 +723,9 @@ const enableKatakanaEnglish = {
   tooltip: computed(() => {
     switch (enableKatakanaEnglish.availableEngines.value) {
       case "none":
-        return "この機能を利用できるエンジンがありません。";
+        return t('dialog.settingDialog.advanced.katakanaEnglishNoEngine');
       case "some":
-        return "一部のエンジンではこの機能を利用できません。";
+        return t('dialog.settingDialog.advanced.katakanaEnglishSomeEngine');
       case "all":
         // この場合はツールチップを表示しない
         return "";
@@ -810,10 +830,9 @@ const acceptRetrieveTelemetryComputed = computed({
     }
 
     void store.actions.SHOW_ALERT_DIALOG({
-      title: "ソフトウェア利用状況のデータ収集の無効化",
-      message:
-        "ソフトウェア利用状況のデータ収集を完全に無効にするには、VOICEVOXを再起動する必要があります",
-      ok: "OK",
+      title: t('dialog.settingDialog.telemetry.telemetryDisableTitle'),
+      message: t('dialog.settingDialog.telemetry.telemetryDisableMessage'),
+      ok: t('dialog.settingDialog.telemetry.telemetryDisableOk'),
     });
   },
 });
@@ -879,7 +898,7 @@ const gpuSwitchEnabled = (engineId: EngineId) => {
 
 const openFileExplore = () => {
   return window.backend.showSaveDirectoryDialog({
-    title: "書き出し先のフォルダを選択",
+    title: t('dialog.settingDialog.saving.selectExportDir'),
   });
 };
 

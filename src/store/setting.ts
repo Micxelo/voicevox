@@ -38,6 +38,7 @@ export const settingStoreState: SettingStoreState = {
   engineIds: [],
   engineInfos: {},
   engineManifests: {},
+  locale: "ja-JP",
   currentTheme: "Default",
   availableThemes: [],
   editorFont: "default",
@@ -97,6 +98,9 @@ export const settingStore = createPartialStore<SettingStoreTypes>({
       void actions.SET_CURRENT_THEME_SETTING({
         currentTheme: await window.backend.getSetting("currentTheme"),
       });
+
+      const savedLocale = await window.backend.getSetting("locale");
+      actions.SET_LOCALE({ locale: savedLocale });
 
       void actions.SET_ACCEPT_RETRIEVE_TELEMETRY({
         acceptRetrieveTelemetry: await window.backend.getSetting(
@@ -237,6 +241,16 @@ export const settingStore = createPartialStore<SettingStoreTypes>({
       // @ts-expect-error Vuexの型処理でUnionが解かれてしまうのを迂回している
       // FIXME: このワークアラウンドをなくす
       mutations.SET_ROOT_MISC_SETTING({ key, value });
+    },
+  },
+
+  SET_LOCALE: {
+    mutation(state, { locale }: { locale: string }) {
+      state.locale = locale;
+    },
+    action({ mutations }, { locale }: { locale: string }) {
+      void window.backend.setSetting("locale", locale);
+      mutations.SET_LOCALE({ locale });
     },
   },
 

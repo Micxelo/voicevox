@@ -12,8 +12,8 @@
     dense
     toggleColor="primary"
     :options="[
-      { label: 'トーク', value: 'talk' },
-      { label: 'ソング', value: 'song' },
+      { label: t('menu.menuBar.titleBarEditorSwitcher.talk'), value: 'talk' },
+      { label: t('menu.menuBar.titleBarEditorSwitcher.song'), value: 'song' },
     ]"
     @update:modelValue="switchEditor"
   />
@@ -23,6 +23,9 @@
 import { computed } from "vue";
 import { useStore } from "@/store";
 import type { EditorType } from "@/type/preload";
+
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const store = useStore();
 

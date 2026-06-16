@@ -471,6 +471,7 @@ export function getConfigSchema({ isMac }: { isMac: boolean }) {
       })
       .prefault({}),
     defaultPresetKeys: z.record(voiceIdSchema, presetKeySchema).default({}),
+    locale: z.string().default("ja-JP"),
     currentTheme: z.string().default("Default"),
     experimentalSetting: experimentalSettingSchema.prefault({}),
     acceptRetrieveTelemetry: z

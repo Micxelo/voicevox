@@ -10,7 +10,7 @@
       flat
       icon="minimize"
       class="title-bar-buttons"
-      aria-label="最小化"
+      :aria-label="t('menu.menuBar.minMaxCloseButtons.minimize')"
       @click="minimizeWindow()"
     ></QBtn>
 
@@ -20,7 +20,7 @@
       flat
       :icon="mdiWindowRestore"
       class="title-bar-buttons"
-      aria-label="最大化"
+      :aria-label="t('menu.menuBar.minMaxCloseButtons.maximize')"
       @click="toggleMaximizeWindow()"
     >
     </QBtn>
@@ -31,7 +31,7 @@
       flat
       icon="crop_square"
       class="title-bar-buttons"
-      aria-label="最大化"
+      :aria-label="t('menu.menuBar.minMaxCloseButtons.maximize')"
       @click="toggleMaximizeWindow()"
     ></QBtn>
 
@@ -40,7 +40,7 @@
       flat
       icon="close"
       class="title-bar-buttons close"
-      aria-label="閉じる"
+      :aria-label="t('menu.menuBar.minMaxCloseButtons.close')"
       @click="closeWindow()"
     ></QBtn>
   </QBadge>
@@ -50,6 +50,9 @@
 import { computed } from "vue";
 import { mdiWindowRestore } from "@quasar/extras/mdi-v5";
 import { useStore } from "@/store";
+
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const store = useStore();
 

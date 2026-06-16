@@ -39,6 +39,9 @@ import TitleBarEditorSwitcher from "./TitleBarEditorSwitcher.vue";
 import { useStore } from "@/store";
 import { getAppInfos } from "@/domain/appInfo";
 
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
 const props = defineProps<{
   /** メニューバーの全サブメニューデータ */
   subMenuData: Record<MenuBarCategory, MenuItemData[]>;
@@ -97,42 +100,42 @@ watch(titleText, (newTitle) => {
 const menudata = computed<(MenuItemButton | MenuItemRoot)[]>(() => [
   {
     type: "root",
-    label: "ファイル",
+    label: t("menu.menuBar.menuBar.file"),
     subMenu: props.subMenuData.file,
     disabled: props.subMenuData.file.length === 0,
     disableWhenUiLocked: false,
   },
   {
     type: "root",
-    label: "編集",
+    label: t("menu.menuBar.menuBar.edit"),
     subMenu: props.subMenuData.edit,
     disabled: props.subMenuData.edit.length === 0,
     disableWhenUiLocked: false,
   },
   {
     type: "root",
-    label: "表示",
+    label: t("menu.menuBar.menuBar.view"),
     subMenu: props.subMenuData.view,
     disabled: props.subMenuData.view.length === 0,
     disableWhenUiLocked: false,
   },
   {
     type: "root",
-    label: "エンジン",
+    label: t("menu.menuBar.menuBar.engine"),
     subMenu: props.subMenuData.engine,
     disabled: props.subMenuData.engine.length === 0,
     disableWhenUiLocked: false,
   },
   {
     type: "root",
-    label: "設定",
+    label: t("menu.menuBar.menuBar.setting"),
     subMenu: props.subMenuData.setting,
     disabled: props.subMenuData.setting.length === 0,
     disableWhenUiLocked: false,
   },
   {
     type: "button",
-    label: "ヘルプ",
+    label: t("menu.menuBar.menuBar.help"),
     onClick: () => {
       void store.actions.SET_DIALOG_OPEN({
         isHelpDialogOpen: true,

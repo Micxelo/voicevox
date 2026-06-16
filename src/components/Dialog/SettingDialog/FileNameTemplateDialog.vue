@@ -2,10 +2,8 @@
   <QDialog v-model="dialogOpened" @beforeShow="initializeInput">
     <QCard class="q-pa-md dialog-card">
       <QCardSection>
-        <div class="text-h5">書き出しファイル名パターン</div>
-        <div class="text-body2 text-grey-8">
-          「$キャラ$」のようなタグを使って書き出すファイル名をカスタマイズできます。
-        </div>
+        <div class="text-h5">{{ t('dialog.fileNameTemplateDialog.title') }}</div>
+        <div class="text-body2 text-grey-8">{{ t('dialog.fileNameTemplateDialog.description') }}</div>
       </QCardSection>
       <QCardActions class="setting-card q-px-md q-py-sm">
         <div class="row full-width justify-between">
@@ -16,7 +14,7 @@
               dense
               outlined
               bgColor="background"
-              label="ファイル名パターン"
+              :label="t('dialog.fileNameTemplateDialog.inputLabel')"
               :suffix="props.extension"
               :maxlength="maxLength"
               :error="hasError"
@@ -24,7 +22,7 @@
             >
               <template #after>
                 <QBtn
-                  label="デフォルトにリセット"
+                  :label="t('dialog.fileNameTemplateDialog.resetButton')"
                   outline
                   textColor="display"
                   class="text-no-wrap q-mr-sm"
@@ -35,7 +33,7 @@
           </div>
         </div>
         <div class="text-body2 text-ellipsis">
-          出力例：{{ previewFileName }}
+          {{ $t('dialog.fileNameTemplateDialog.previewLabel') }}{{ previewFileName }}
         </div>
         <div class="row full-width q-my-md">
           <QBtn
@@ -50,14 +48,14 @@
         </div>
         <div class="row full-width justify-end">
           <QBtn
-            label="キャンセル"
+            :label="t('dialog.fileNameTemplateDialog.cancelButton')"
             outline
             textColor="display"
             class="text-no-wrap text-bold q-mr-sm col-2"
             @click="dialogOpened = false"
           />
           <QBtn
-            label="確定"
+            :label="t('dialog.fileNameTemplateDialog.submitButton')"
             unelevated
             color="primary"
             textColor="display-on-primary"
@@ -76,6 +74,8 @@ import { computed, ref, nextTick } from "vue";
 import { QInput } from "quasar";
 import { replaceTagIdToTagString, sanitizeFileName } from "@/store/utility";
 import { UnreachableError } from "@/type/utility";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
 const props = defineProps<{
@@ -116,18 +116,24 @@ const invalidChar = computed(() => {
 });
 const errorMessage = computed(() => {
   if (temporaryTemplate.value === "") {
-    return "何か入力してください";
+    return t("dialog.fileNameTemplateDialog.empty");
   }
 
   const result: string[] = [];
   if (invalidChar.value != undefined) {
-    result.push(`使用できない文字が含まれています：「${invalidChar.value}」`);
+    result.push(
+      t("dialog.fileNameTemplateDialog.invalidCharacters", { char: invalidChar.value }),
+    );
   }
   if (previewFileName.value.includes("$")) {
-    result.push(`不正なタグが存在するか、$が単体で含まれています`);
+    result.push(t("dialog.fileNameTemplateDialog.invalidTag"));
   }
   if (missingIndexTagString.value) {
-    result.push(`$${replaceTagIdToTagString["index"]}$は必須です`);
+    result.push(
+      t("dialog.fileNameTemplateDialog.missingIndexTag", {
+        indexTag: `$${replaceTagIdToTagString["index"]}$`,
+      }),
+    );
   }
   return result.join(", ");
 });

@@ -91,6 +91,9 @@ export default defineConfig((options) => {
   return {
     root: path.resolve(import.meta.dirname, "src"),
     envDir: import.meta.dirname,
+    define: {
+      'process': '({ env: {} })',   // 模拟 process 对象
+    },
     build: {
       target: electronTargetVersion?.chrome,
       outDir: path.resolve(import.meta.dirname, "dist"),

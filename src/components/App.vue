@@ -40,6 +40,8 @@ import { concatMenuBarData } from "@/components/Menu/MenuBar/menuBarData";
 import { isElectron } from "@/helpers/platform";
 import { useElectronMenuBarData } from "@/backend/electron/renderer/menuBarData";
 import { removeNullableAndBoolean } from "@/helpers/arrayHelper";
+import { useI18n } from "vue-i18n";
+const { locale } = useI18n();
 
 const store = useStore();
 
@@ -86,6 +88,17 @@ watchEffect(
   },
   { flush: "post" },
 );
+
+// watch locale change and update i18n locale
+watch(
+  () => store.state.locale,
+  (newLocale) => {
+    if (newLocale) {
+      locale.value = newLocale;
+    }
+  },
+  { immediate: true }
+)
 
 // テーマの変更を監視してCSS変数を変更する
 watchEffect(() => {

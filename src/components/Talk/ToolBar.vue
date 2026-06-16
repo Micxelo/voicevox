@@ -26,6 +26,9 @@ import { getToolbarButtonName } from "@/store/utility";
 import { useHotkeyManager } from "@/plugins/hotkeyPlugin";
 import { handlePossiblyNotMorphableError } from "@/store/audioGenerate";
 
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
 type ButtonContent = {
   text: string;
   click(): void;
